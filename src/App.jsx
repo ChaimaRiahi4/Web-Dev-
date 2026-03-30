@@ -46,43 +46,46 @@ const stories = [
 
 const courseTitle = "Advanced Web Development"
 
-function Header() {
+const Header = () => (
+  <div>
+    <h1>Hacker News App</h1>
+  </div>
+)
+
+const Search = () => {
+  const handleChange = (event) => {
+    console.log(event.target.value)
+    console.log("User is typing...")
+  }
+
   return (
     <div>
-      <h1>Hacker News App</h1>
+      <label htmlFor="studentInput">Search:</label>
+      <input
+        type="text"
+        id="studentInput"
+        onChange={handleChange}
+      />
     </div>
   )
 }
 
-function Search() {
-  return (
-    <div>
-      <label htmlFor="studentInput">Enter your name:</label>
-      <input type="text" id="studentInput"/>
-    </div>
-  )
-}
+const List = () => (
+  <div>
+    {stories.map((story) => (
+      <div key={story.objectID}>
+        <h3>
+          <a href={story.url} target="_blank">{story.title}</a>
+        </h3>
+        <p>Author: {story.author}</p>
+        <p>Points: {story.points}</p>
+        <p>Comments: {story.num_comments}</p>
+      </div>
+    ))}
+  </div>
+)
 
-function List() {
-  return (
-    <div>
-      {stories.map(function(story) {
-        return (
-          <div key={story.objectID}>
-            <h3>
-              <a href={story.url} target="_blank">{story.title}</a>
-            </h3>
-            <p>Author: {story.author}</p>
-            <p>Points: {story.points}</p>
-            <p>Comments: {story.num_comments}</p>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
-function App() {
+const App = () => {
   const studentName = "Chaima"
 
   const student = {
@@ -91,9 +94,7 @@ function App() {
     track: "Web Development"
   }
 
-  function sayHello() {
-    return "Hello " + studentName + ", welcome to the course!"
-  }
+  const sayHello = () => "Hello " + studentName + ", welcome to the course!"
 
   return (
     <div>
@@ -110,6 +111,16 @@ function App() {
     </div>
   )
 }
+
+// WEEK 5 REFLECTIONS
+// 1. When do we use concise body arrow functions?
+// When the function only returns a single expression — no extra logic needed
+
+// 2. When do we use block body arrow functions?
+// When we need to add logic inside the function like event handlers or variables
+
+// 3. What does an event object contain?
+// It contains info about the event — event.target.value gives the typed input value
 
 // WEEK 4 REFLECTIONS
 // 1. What does App do now?
