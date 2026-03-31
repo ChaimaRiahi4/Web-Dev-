@@ -9,42 +9,47 @@
 // }
 // This structure is realistic because it matches the real Hacker News API
 
-const stories = [
-  {
-    objectID: 1,
-    title: "React Official Documentation",
-    url: "https://react.dev",
-    author: "Facebook",
-    points: 500,
-    num_comments: 32
-  },
-  {
-    objectID: 2,
-    title: "Vite — Next Generation Frontend Tooling",
-    url: "https://vitejs.dev",
-    author: "Evan You",
-    points: 189,
-    num_comments: 27
-  },
-  {
-    objectID: 3,
-    title: "JavaScript MDN Web Docs",
-    url: "https://developer.mozilla.org",
-    author: "Diva",
-    points: 312,
-    num_comments: 45
-  },
-  {
-    objectID: 4,
-    title: "CSS Tricks — A Complete Guide to Flexbox",
-    url: "https://css-tricks.com",
-    author: "Chaima Riahi",
-    points: 178,
-    num_comments: 22
-  }
-]
+import { useState } from "react"
 
 const courseTitle = "Advanced Web Development"
+
+const Item = ({ story }) => (
+  <div>
+    <h3>
+      <a href={story.url} target="_blank">{story.title}</a>
+    </h3>
+    <p>Author: {story.author}</p>
+    <p>Points: {story.points}</p>
+    <p>Comments: {story.num_comments}</p>
+  </div>
+)
+
+const List = ({ stories }) => (
+  <div>
+    {stories.map((story) => (
+      <Item key={story.objectID} story={story} />
+    ))}
+  </div>
+)
+
+const Search = ({ onSearch }) => {
+  const handleChange = (event) => {
+    console.log("Search component re-rendering")
+    console.log(event.target.value)
+    onSearch(event.target.value)
+  }
+
+  return (
+    <div>
+      <label htmlFor="search">Search:</label>
+      <input
+        type="text"
+        id="search"
+        onChange={handleChange}
+      />
+    </div>
+  )
+}
 
 const Header = () => (
   <div>
@@ -52,40 +57,42 @@ const Header = () => (
   </div>
 )
 
-const Search = () => {
-  const handleChange = (event) => {
-    console.log(event.target.value)
-    console.log("User is typing...")
-  }
-
-  return (
-    <div>
-      <label htmlFor="studentInput">Search:</label>
-      <input
-        type="text"
-        id="studentInput"
-        onChange={handleChange}
-      />
-    </div>
-  )
-}
-
-const List = () => (
-  <div>
-    {stories.map((story) => (
-      <div key={story.objectID}>
-        <h3>
-          <a href={story.url} target="_blank">{story.title}</a>
-        </h3>
-        <p>Author: {story.author}</p>
-        <p>Points: {story.points}</p>
-        <p>Comments: {story.num_comments}</p>
-      </div>
-    ))}
-  </div>
-)
-
 const App = () => {
+  const stories = [
+    {
+      objectID: 1,
+      title: "React Official Documentation",
+      url: "https://react.dev",
+      author: "Facebook",
+      points: 500,
+      num_comments: 32
+    },
+    {
+      objectID: 2,
+      title: "Vite — Next Generation Frontend Tooling",
+      url: "https://vitejs.dev",
+      author: "Evan You",
+      points: 189,
+      num_comments: 27
+    },
+    {
+      objectID: 3,
+      title: "JavaScript MDN Web Docs",
+      url: "https://developer.mozilla.org",
+      author: "Diva",
+      points: 312,
+      num_comments: 45
+    },
+    {
+      objectID: 4,
+      title: "CSS Tricks — A Complete Guide to Flexbox",
+      url: "https://css-tricks.com",
+      author: "Chaima Riahi",
+      points: 178,
+      num_comments: 22
+    }
+  ]
+
   const studentName = "Chaima"
 
   const student = {
@@ -96,21 +103,45 @@ const App = () => {
 
   const sayHello = () => "Hello " + studentName + ", welcome to the course!"
 
+  const [searchTerm, setSearchTerm] = useState("")
+
+  console.log("App component re-rendering")
+
+  const handleSearch = (value) => {
+    setSearchTerm(value)
+  }
+
+  const filteredStories = stories.filter((story) =>
+    story.title.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   return (
     <div>
       <Header />
       <p>Student name: {studentName}</p>
       <p>Course: {courseTitle}</p>
       <p>Welcome to {courseTitle}, {studentName}!</p>
-      <Search />
+      <Search onSearch={handleSearch} />
       <p>Name: {student.name}</p>
       <p>Age: {student.age}</p>
       <p>Track: {student.track}</p>
       <p>{sayHello()}</p>
-      <List />
+      <List stories={filteredStories} />
     </div>
   )
 }
+
+// WEEK 6 REFLECTIONS
+// 1. What is the difference between props and state?
+// Props are passed from parent to child and cannot be changed by the child.
+// State is owned by the component and can change over time.
+
+// 2. Why do we lift state up?
+// Because Search triggers the change but App owns the data.
+// State must live in the common parent to share it across components.
+
+// 3. Where should filtering logic live?
+// In App — because App owns both the data and the searchTerm state.
 
 // WEEK 5 REFLECTIONS
 // 1. When do we use concise body arrow functions?
