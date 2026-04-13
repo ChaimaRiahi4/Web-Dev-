@@ -9,7 +9,7 @@
 // }
 // This structure is realistic because it matches the real Hacker News API
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 const courseTitle = "Advanced Web Development"
 
@@ -32,7 +32,7 @@ const List = ({ stories }) => (
   </div>
 )
 
-const Search = ({ onSearch }) => {
+const Search = ({ searchTerm, onSearch }) => {
   const handleChange = (event) => {
     console.log("Search component re-rendering")
     console.log(event.target.value)
@@ -45,6 +45,7 @@ const Search = ({ onSearch }) => {
       <input
         type="text"
         id="search"
+        value={searchTerm}
         onChange={handleChange}
       />
     </div>
@@ -103,7 +104,13 @@ const App = () => {
 
   const sayHello = () => "Hello " + studentName + ", welcome to the course!"
 
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState(
+    localStorage.getItem("search") || ""
+  )
+
+  useEffect(() => {
+    localStorage.setItem("search", searchTerm)
+  }, [searchTerm])
 
   console.log("App component re-rendering")
 
@@ -121,7 +128,7 @@ const App = () => {
       <p>Student name: {studentName}</p>
       <p>Course: {courseTitle}</p>
       <p>Welcome to {courseTitle}, {studentName}!</p>
-      <Search onSearch={handleSearch} />
+      <Search searchTerm={searchTerm} onSearch={handleSearch} />
       <p>Name: {student.name}</p>
       <p>Age: {student.age}</p>
       <p>Track: {student.track}</p>
@@ -130,6 +137,19 @@ const App = () => {
     </div>
   )
 }
+
+// WEEK 7 REFLECTIONS
+// 1. What is a controlled component?
+// A controlled component is an input whose value is always driven by React state.
+// React is the single source of truth — not the DOM.
+
+// 2. What is a side effect in React?
+// A side effect is any operation that reaches outside the render cycle —
+// like reading or writing localStorage, fetching data, or setting timers.
+
+// 3. Why do we use useEffect instead of calling code directly?
+// useEffect keeps the render function pure. Side effects run after render,
+// not during it, which prevents bugs and keeps React in control.
 
 // WEEK 6 REFLECTIONS
 // 1. What is the difference between props and state?
